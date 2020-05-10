@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TestSubjectDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GradeList">
+          <Key>
+            <PropertyRef Name="Grade" />
+          </Key>
+          <Property Name="Grade" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubjectDetails">
+          <Key>
+            <PropertyRef Name="SubjectID" />
+          </Key>
+          <Property Name="SubjectID" Type="int" Nullable="false" />
+          <Property Name="Hall" Type="varchar" MaxLength="20" />
+          <Property Name="Day" Type="char" MaxLength="3" />
+          <Property Name="StartTime" Type="time" Precision="7" />
+          <Property Name="EndTime" Type="time" Precision="7" />
+        </EntityType>
+        <EntityType Name="SubjectTB">
+          <Key>
+            <PropertyRef Name="SubjectCode" />
+          </Key>
+          <Property Name="SubjectCode" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SubjectName" Type="varchar" MaxLength="20" />
+          <Property Name="Grade" Type="varchar" MaxLength="20" />
+          <Property Name="Teacher" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="TeacherList">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="TeacherName" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK_SubjectDetails_SubjectTB">
+          <End Role="SubjectTB" Type="Self.SubjectTB" Multiplicity="1" />
+          <End Role="SubjectDetails" Type="Self.SubjectDetails" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="SubjectTB">
+              <PropertyRef Name="SubjectCode" />
+            </Principal>
+            <Dependent Role="SubjectDetails">
+              <PropertyRef Name="SubjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubjectTB_GradeList">
+          <End Role="GradeList" Type="Self.GradeList" Multiplicity="0..1" />
+          <End Role="SubjectTB" Type="Self.SubjectTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GradeList">
+              <PropertyRef Name="Grade" />
+            </Principal>
+            <Dependent Role="SubjectTB">
+              <PropertyRef Name="Grade" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubjectTB_TeacherList">
+          <End Role="TeacherList" Type="Self.TeacherList" Multiplicity="0..1" />
+          <End Role="SubjectTB" Type="Self.SubjectTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TeacherList">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="SubjectTB">
+              <PropertyRef Name="Teacher" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TestSubjectDBModelStoreContainer">
+          <EntitySet Name="GradeList" EntityType="Self.GradeList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubjectDetails" EntityType="Self.SubjectDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubjectTB" EntityType="Self.SubjectTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TeacherList" EntityType="Self.TeacherList" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_SubjectDetails_SubjectTB" Association="Self.FK_SubjectDetails_SubjectTB">
+            <End Role="SubjectTB" EntitySet="SubjectTB" />
+            <End Role="SubjectDetails" EntitySet="SubjectDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubjectTB_GradeList" Association="Self.FK_SubjectTB_GradeList">
+            <End Role="GradeList" EntitySet="GradeList" />
+            <End Role="SubjectTB" EntitySet="SubjectTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubjectTB_TeacherList" Association="Self.FK_SubjectTB_TeacherList">
+            <End Role="TeacherList" EntitySet="TeacherList" />
+            <End Role="SubjectTB" EntitySet="SubjectTB" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TestSubjectDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="GradeList">
+          <Key>
+            <PropertyRef Name="Grade" />
+          </Key>
+          <Property Name="Grade" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="SubjectTBs" Relationship="Self.FK_SubjectTB_GradeList" FromRole="GradeList" ToRole="SubjectTB" />
+        </EntityType>
+        <EntityType Name="SubjectDetail">
+          <Key>
+            <PropertyRef Name="SubjectID" />
+          </Key>
+          <Property Name="SubjectID" Type="Int32" Nullable="false" />
+          <Property Name="Hall" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Day" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="StartTime" Type="Time" Precision="7" />
+          <Property Name="EndTime" Type="Time" Precision="7" />
+          <NavigationProperty Name="SubjectTB" Relationship="Self.FK_SubjectDetails_SubjectTB" FromRole="SubjectDetails" ToRole="SubjectTB" />
+        </EntityType>
+        <EntityType Name="SubjectTB">
+          <Key>
+            <PropertyRef Name="SubjectCode" />
+          </Key>
+          <Property Name="SubjectCode" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubjectName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Grade" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Teacher" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GradeList" Relationship="Self.FK_SubjectTB_GradeList" FromRole="SubjectTB" ToRole="GradeList" />
+          <NavigationProperty Name="SubjectDetail" Relationship="Self.FK_SubjectDetails_SubjectTB" FromRole="SubjectTB" ToRole="SubjectDetails" />
+          <NavigationProperty Name="TeacherList" Relationship="Self.FK_SubjectTB_TeacherList" FromRole="SubjectTB" ToRole="TeacherList" />
+        </EntityType>
+        <EntityType Name="TeacherList">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TeacherName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SubjectTBs" Relationship="Self.FK_SubjectTB_TeacherList" FromRole="TeacherList" ToRole="SubjectTB" />
+        </EntityType>
+        <Association Name="FK_SubjectTB_GradeList">
+          <End Role="GradeList" Type="Self.GradeList" Multiplicity="0..1" />
+          <End Role="SubjectTB" Type="Self.SubjectTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GradeList">
+              <PropertyRef Name="Grade" />
+            </Principal>
+            <Dependent Role="SubjectTB">
+              <PropertyRef Name="Grade" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubjectDetails_SubjectTB">
+          <End Role="SubjectTB" Type="Self.SubjectTB" Multiplicity="1" />
+          <End Role="SubjectDetails" Type="Self.SubjectDetail" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="SubjectTB">
+              <PropertyRef Name="SubjectCode" />
+            </Principal>
+            <Dependent Role="SubjectDetails">
+              <PropertyRef Name="SubjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubjectTB_TeacherList">
+          <End Role="TeacherList" Type="Self.TeacherList" Multiplicity="0..1" />
+          <End Role="SubjectTB" Type="Self.SubjectTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TeacherList">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="SubjectTB">
+              <PropertyRef Name="Teacher" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBModel" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GradeLists" EntityType="Self.GradeList" />
+          <EntitySet Name="SubjectDetails" EntityType="Self.SubjectDetail" />
+          <EntitySet Name="SubjectTBs" EntityType="Self.SubjectTB" />
+          <EntitySet Name="TeacherLists" EntityType="Self.TeacherList" />
+          <AssociationSet Name="FK_SubjectTB_GradeList" Association="Self.FK_SubjectTB_GradeList">
+            <End Role="GradeList" EntitySet="GradeLists" />
+            <End Role="SubjectTB" EntitySet="SubjectTBs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubjectDetails_SubjectTB" Association="Self.FK_SubjectDetails_SubjectTB">
+            <End Role="SubjectTB" EntitySet="SubjectTBs" />
+            <End Role="SubjectDetails" EntitySet="SubjectDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubjectTB_TeacherList" Association="Self.FK_SubjectTB_TeacherList">
+            <End Role="TeacherList" EntitySet="TeacherLists" />
+            <End Role="SubjectTB" EntitySet="SubjectTBs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TestSubjectDBModelStoreContainer" CdmEntityContainer="DBModel">
+          <EntitySetMapping Name="GradeLists">
+            <EntityTypeMapping TypeName="TestSubjectDBModel.GradeList">
+              <MappingFragment StoreEntitySet="GradeList">
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubjectDetails">
+            <EntityTypeMapping TypeName="TestSubjectDBModel.SubjectDetail">
+              <MappingFragment StoreEntitySet="SubjectDetails">
+                <ScalarProperty Name="SubjectID" ColumnName="SubjectID" />
+                <ScalarProperty Name="Hall" ColumnName="Hall" />
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubjectTBs">
+            <EntityTypeMapping TypeName="TestSubjectDBModel.SubjectTB">
+              <MappingFragment StoreEntitySet="SubjectTB">
+                <ScalarProperty Name="SubjectCode" ColumnName="SubjectCode" />
+                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+                <ScalarProperty Name="Teacher" ColumnName="Teacher" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeacherLists">
+            <EntityTypeMapping TypeName="TestSubjectDBModel.TeacherList">
+              <MappingFragment StoreEntitySet="TeacherList">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="TeacherName" ColumnName="TeacherName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
